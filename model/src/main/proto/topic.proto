@@ -98,7 +98,7 @@ message TopicSummary {
 
   // The associated thumbnail that should be displayed with this topic summary.
   LessonThumbnail topic_thumbnail = 10;
-=======
+}
 // Corresponds to a single topic that can be read, played, trained, or reviewed.
 message Topic {
   // The ID corresponding to the topic.
@@ -195,7 +195,6 @@ message SkillSummary {
   // A URL corresponding to a thumbnail associated with this skill. If this is absent, the UI should show a reasonable
   // alternative.
   string thumbnail_url = 3;
->>>>>>> origin/introduce-topic-controller-interface
 }
 
 // Represents the play state of a single chapter.

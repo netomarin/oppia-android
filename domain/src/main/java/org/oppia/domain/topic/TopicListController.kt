@@ -13,9 +13,6 @@ import org.oppia.app.model.TopicList
 import org.oppia.app.model.TopicSummary
 import org.oppia.util.data.AsyncResult
 
-const val TEST_TOPIC_ID_0 = "test_topic_id_0"
-const val TEST_TOPIC_ID_1 = "test_topic_id_1"
-
 private val EVICTION_TIME_MILLIS = TimeUnit.DAYS.toMillis(1)
 
 /** Controller for retrieving the list of topics available to the learner to play. */
