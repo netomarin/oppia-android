@@ -19,16 +19,17 @@ class ConceptCardPresenter @Inject constructor(
   private val viewModelProvider: ViewModelProvider<ConceptCardViewModel>
 ){
   fun handleCreateView(inflater: LayoutInflater, container: ViewGroup?, skillId: String): View? {
+    val viewModel = getConceptCardViewModel()
+    viewModel.setSkillId(TEST_SKILL_ID_0)
     val binding = ConceptcardFragmentBinding.inflate(inflater, container, /* attachToRoot= */ false)
     binding.conceptCardToolbar.setNavigationIcon(R.drawable.ic_close_white_24dp)
     binding.conceptCardToolbar.setNavigationOnClickListener {
       (fragment as? DialogFragment)?.dismiss()
     }
     binding.let {
-      it.viewModel = getConceptCardViewModel()
+      it.viewModel = viewModel
       it.lifecycleOwner = fragment
     }
-
     return binding.root
   }
 

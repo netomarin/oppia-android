@@ -18,7 +18,11 @@ class ConceptCardViewModel @Inject constructor(
   private val topicController: TopicController,
   private val logger: Logger
 ) : ViewModel() {
-  private val skillId: String = TEST_SKILL_ID_0
+  private lateinit var skillId: String
+
+  fun setSkillId(id: String) {
+    skillId = id
+  }
 
   fun getConceptCardLiveData(): LiveData<ConceptCard> {
     return Transformations.map(topicController.getConceptCard(skillId), ::processConceptCardResult)
