@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.processNextEventInCurrentThread
 import org.oppia.app.fragment.FragmentScope
 import org.oppia.app.model.ConceptCard
+import org.oppia.app.model.SubtitledHtml
 import org.oppia.domain.topic.TEST_SKILL_ID_0
 import org.oppia.domain.topic.TopicController
 import org.oppia.util.data.AsyncResult
@@ -18,14 +19,32 @@ class ConceptCardViewModel @Inject constructor(
   private val topicController: TopicController,
   private val logger: Logger
 ) : ViewModel() {
+
   private lateinit var skillId: String
 
+  val conceptCardLiveData: LiveData<ConceptCard> by lazy {
+    processConceptCardLiveData()
+  }
+
+  val workedExamplesLiveData: LiveData<List<SubtitledHtml>> by lazy {
+    processWorkedExamplesLiveData()
+  }
+
+  /** Sets the value of skillId. Must be called before setting ViewModel to binding. */
   fun setSkillId(id: String) {
     skillId = id
   }
 
-  fun getConceptCardLiveData(): LiveData<ConceptCard> {
-    return Transformations.map(topicController.getConceptCard(skillId), ::processConceptCardResult)
+  private val conceptCardResultLiveData: LiveData<AsyncResult<ConceptCard>> by lazy {
+    topicController.getConceptCard(skillId)
+  }
+
+  private fun processConceptCardLiveData(): LiveData<ConceptCard> {
+    return Transformations.map(conceptCardResultLiveData, ::processConceptCardResult)
+  }
+
+  private fun processWorkedExamplesLiveData(): LiveData<List<SubtitledHtml>> {
+    return Transformations.map(conceptCardResultLiveData, ::processConceptCardWorkExamples)
   }
 
   private fun processConceptCardResult(conceptCardResult: AsyncResult<ConceptCard>): ConceptCard {
@@ -33,5 +52,12 @@ class ConceptCardViewModel @Inject constructor(
       logger.e("ConceptCardFragment", "Failed to retrieve Concept Card: " + conceptCardResult.getErrorOrNull())
     }
     return conceptCardResult.getOrDefault(ConceptCard.getDefaultInstance())
+  }
+
+  private fun processConceptCardWorkExamples(conceptCardResult: AsyncResult<ConceptCard>): List<SubtitledHtml> {
+    if (conceptCardResult.isFailure()) {
+      logger.e("ConceptCardFragment", "Failed to retrieve Concept Card: " + conceptCardResult.getErrorOrNull())
+    }
+    return conceptCardResult.getOrDefault(ConceptCard.getDefaultInstance()).workedExampleList
   }
 }

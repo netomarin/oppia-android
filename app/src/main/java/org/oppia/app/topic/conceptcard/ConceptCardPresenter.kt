@@ -20,8 +20,7 @@ class ConceptCardPresenter @Inject constructor(
 ){
   fun handleCreateView(inflater: LayoutInflater, container: ViewGroup?, skillId: String): View? {
     val viewModel = getConceptCardViewModel()
-    viewModel.setSkillId(TEST_SKILL_ID_0)
-    //viewModel.getConceptCardLiveData().value?.workedExampleList
+    viewModel.setSkillId(skillId)
     val binding = ConceptcardFragmentBinding.inflate(inflater, container, /* attachToRoot= */ false)
     binding.conceptCardToolbar.setNavigationIcon(R.drawable.ic_close_white_24dp)
     binding.conceptCardToolbar.setNavigationOnClickListener {
