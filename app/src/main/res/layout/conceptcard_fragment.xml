@@ -34,8 +34,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
-        android:visibility="@{viewModel.getConceptCardLiveData().hasExplanation() ? View.VISIBLE : View.GONE}"
-        android:text="@{viewModel.getConceptCardLiveData().explanation.getHtml()}" />
+        android:visibility="@{viewModel.conceptCardLiveData.hasExplanation() ? View.VISIBLE : View.GONE}"
+        android:text="@{viewModel.conceptCardLiveData.explanation.getHtml()}" />
     </ScrollView>
 
   </androidx.constraintlayout.widget.ConstraintLayout>
