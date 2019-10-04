@@ -23,7 +23,7 @@ class StateFragment : InjectableFragment(), CellularDataInterface {
     // TODO(#116): Code to control the value of showCellularDataDialog using AudioController.
   }
 
-  override fun onAttach(context: Context?) {
+  override fun onAttach(context: Context) {
     super.onAttach(context)
     fragmentComponent.inject(this)
   }
