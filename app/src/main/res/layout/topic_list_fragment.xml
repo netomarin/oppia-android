@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto">
+
+  <data>
+    <import type="android.view.View"/>
+    <variable
+      name="viewModel"
+      type="org.oppia.app.home.topiclist.TopicListViewModel"/>
+  </data>
+
+  <!-- Although this FrameLayout has multiple children, only one should be visible at any given time. -->
+  <FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <TextView
+      android:id="@+id/loading_topics_list_text_view"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/loading_topics_list_text"
+      android:visibility="@{viewModel.topicListIsLoading ? View.VISIBLE : View.GONE}"/>
+
+    <TextView
+      android:id="@+id/error_loading_topics_list_text_view"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/error_loading_topics_list_text"
+      android:visibility="@{viewModel.topicListLookupFailed ? View.VISIBLE : View.GONE}"/>
+
+    <TextView
+      android:id="@+id/empty_topics_list_text_view"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/empty_topics_list_text"
+      android:visibility="@{viewModel.topicListLookupSucceeded &amp;&amp; viewModel.topicListSummaryLiveData.isEmpty() ? View.VISIBLE : View.GONE}"/>
+
+    <!-- https://stackoverflow.com/a/32735182/3689782 -->
+    <androidx.recyclerview.widget.RecyclerView
+      android:id="@+id/topic_list_recycler_view"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      app:data="@{viewModel.topicListSummaryLiveData}"
+      android:visibility="@{viewModel.topicListLookupSucceeded &amp;&amp; !viewModel.topicListSummaryLiveData.isEmpty() ? View.VISIBLE : View.GONE}"/>
+  </FrameLayout>
+
+</layout>

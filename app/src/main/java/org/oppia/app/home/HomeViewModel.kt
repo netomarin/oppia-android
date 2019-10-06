@@ -10,9 +10,9 @@ import org.oppia.domain.UserAppHistoryController
 import org.oppia.util.data.AsyncResult
 import javax.inject.Inject
 
-/** [ViewModel] for user app usage history. */
+/** [ViewModel] for the home fragment. */
 @FragmentScope
-class UserAppHistoryViewModel @Inject constructor(
+class HomeViewModel @Inject constructor(
   private val userAppHistoryController: UserAppHistoryController,
   private val logger: Logger
 ): ViewModel() {

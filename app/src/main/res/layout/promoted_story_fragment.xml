@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto">
+
+  <data>
+    <import type="android.view.View"/>
+    <variable
+      name="viewModel"
+      type="org.oppia.app.home.topiclist.PromotedStoryViewModel"/>
+  </data>
+
+  <!-- Although this FrameLayout has multiple children, only one should be visible at any given time. -->
+  <FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+      android:id="@+id/loading_topics_list_text_view"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/loading_topics_list_text"
+      android:visibility="@{viewModel.topicListIsLoading ? View.VISIBLE : View.GONE}"/>
+
+    <TextView
+      android:id="@+id/error_loading_topics_list_text_view"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/error_loading_topics_list_text"
+      android:visibility="@{viewModel.topicListLookupFailed ? View.VISIBLE : View.GONE}"/>
+
+    <TextView
+      android:id="@+id/empty_topics_list_text_view"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/empty_topics_list_text"
+      android:visibility="@{viewModel.topicListLookupSucceeded &amp;&amp; viewModel.promotedStoryLiveData.storyId.isEmpty() ? View.VISIBLE : View.GONE}"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+      android:id="@+id/promoted_story_tile"
+      android:layout_width="300dp"
+      android:layout_height="220dp"
+      android:layout_margin="10dp"
+      app:roundedRectDrawableWithColor="@{viewModel.promotedStoryLiveData.lessonThumbnail.backgroundColorRgb}"
+      android:clickable="true"
+      android:focusable="true"
+      android:onClick="@{viewModel::clickOnStoryTile}"
+      android:visibility="@{viewModel.topicListLookupSucceeded &amp;&amp; !viewModel.promotedStoryLiveData.storyId.isEmpty() ? View.VISIBLE : View.GONE}"
+      android:elevation="3dp">
+      <ImageView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:src="@{viewModel.promotedStoryLiveData.lessonThumbnail.thumbnailGraphic}"
+        android:scaleType="centerCrop"
+        android:paddingStart="40dp"
+        android:paddingEnd="40dp"
+        android:paddingTop="40dp"
+        android:importantForAccessibility="no"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/story_details_section" />
+      <FrameLayout
+        android:id="@+id/story_details_section"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:background="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+      <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@{viewModel.promotedStoryLiveData.storyName}"
+        android:textColor="@color/black"
+        android:fontFamily="sans-serif-medium"
+        android:textSize="14sp"
+        android:layout_margin="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/story_details_section"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+  </FrameLayout>
+
+</layout>

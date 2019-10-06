@@ -1,8 +1,9 @@
-package org.oppia.app.recyclerview
+package org.oppia.app.databinding
 
 import androidx.databinding.BindingAdapter
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
+import org.oppia.app.recyclerview.BindableAdapter
 
 /**
  * Binds the specified generic data to the adapter of the [RecyclerView]. This is called by

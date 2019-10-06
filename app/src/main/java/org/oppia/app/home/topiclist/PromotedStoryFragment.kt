@@ -1,4 +1,4 @@
-package org.oppia.app.topic.review
+package org.oppia.app.home.topiclist
 
 import android.content.Context
 import android.os.Bundle
@@ -8,10 +8,10 @@ import android.view.ViewGroup
 import org.oppia.app.fragment.InjectableFragment
 import javax.inject.Inject
 
-/** Fragment that card for topic review. */
-class TopicReviewFragment : InjectableFragment() {
+/** Fragment corresponding to the promoted (recommended or continued) story on the home page. */
+class PromotedStoryFragment : InjectableFragment() {
   @Inject
-  lateinit var topicReviewFragmentPresenter: TopicReviewFragmentPresenter
+  lateinit var promotedStoryFragmentPresenter: PromotedStoryFragmentPresenter
 
   override fun onAttach(context: Context) {
     super.onAttach(context)
@@ -19,6 +19,6 @@ class TopicReviewFragment : InjectableFragment() {
   }
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-    return topicReviewFragmentPresenter.handleCreateView(inflater, container)
+    return promotedStoryFragmentPresenter.handleCreateView(inflater, container)
   }
 }
