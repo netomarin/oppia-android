@@ -14,23 +14,15 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
-<<<<<<< HEAD
  * Controller that tracks and reports the learner's ephemeral/non-persisted progress through an practice training
  * session. Note that this controller only supports one active training session at a time.
  *
  * The current training session is started via the question training controller.
-=======
- * Controller that tracks and reports the learner's ephemeral/non-persisted progress through a question training
- * session. Note that this controller only supports one active training session at a time.
- *
- * The current training session session is started via the question training controller.
->>>>>>> develop
  *
  * This class is thread-safe, but the order of applied operations is arbitrary. Calling code should take care to ensure
  * that uses of this class do not specifically depend on ordering.
  */
 @Singleton
-<<<<<<< HEAD
 class QuestionAssessmentProgressController @Inject constructor() {
   private lateinit var inProgressQuestionList: List<Question>
   private var playing: Boolean = false

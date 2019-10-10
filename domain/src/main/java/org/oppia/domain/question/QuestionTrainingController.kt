@@ -2,12 +2,15 @@ package org.oppia.domain.question
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.Transformations
 import org.oppia.app.model.Question
 import org.oppia.domain.topic.TEST_SKILL_ID_0
 import org.oppia.domain.topic.TEST_SKILL_ID_1
 import org.oppia.domain.topic.TEST_SKILL_ID_2
 import org.oppia.util.data.AsyncResult
 import org.oppia.util.data.DataProviders
+import org.oppia.util.logging.Logger
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -19,6 +22,7 @@ const val TEST_QUESTION_ID_2 = "question_id_2"
 /** Controller for retrieving a set of questions. */
 @Singleton
 class QuestionTrainingController @Inject constructor(
+  private val logger: Logger,
   private val questionAssessmentProgressController: QuestionAssessmentProgressController,
   private val dataProviders: DataProviders
 ) {
@@ -35,8 +39,11 @@ class QuestionTrainingController @Inject constructor(
    */
   fun startQuestionTrainingSession(skillIdsList: List<String>): LiveData<AsyncResult<Any?>> {
     return try {
-      val questionsList = retrieveQuestionsForSkillIds(skillIdsList)
-      questionAssessmentProgressController.beginQuestionTrainingSession(questionsList)
+      val questionsList = Transformations.map(retrieveQuestionsForSkillIds(skillIdsList), ::processQuestionsForSkillIdsResult)
+      questionsList.observeForever {
+        questionAssessmentProgressController.beginQuestionTrainingSession(it)
+      }
+      // Not sure this is correct implementation since observer and return value are not synced together
       MutableLiveData(AsyncResult.success<Any?>(null))
     } catch (e: Exception) {
       MutableLiveData(AsyncResult.failed(e))
@@ -97,5 +104,12 @@ class QuestionTrainingController @Inject constructor(
       }
     }
     return questionsList
+  }
+
+  private fun processQuestionsForSkillIdsResult(result: AsyncResult<List<Question>>): List<Question> {
+    if (result.isFailure()) {
+      logger.e("QuestionTrainingController", "Failed to get questions for skillIds")
+    }
+    return result.getOrDefault(emptyList())
   }
 }
