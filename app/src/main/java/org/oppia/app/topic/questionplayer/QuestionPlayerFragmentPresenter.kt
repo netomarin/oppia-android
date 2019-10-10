@@ -51,10 +51,10 @@ class QuestionPlayerFragmentPresenter @Inject constructor(
   }
 
   private fun subscribeToCurrentState() {
-    Transformations.map(questionAssessmentProgressController.getCurrentQuestion(), )
-    .observe(fragment, Observer {
-
-    })
+    Transformations.map(questionAssessmentProgressController.getCurrentQuestion(), ::processEphemeralQuestionResult)
+      .observe(fragment, Observer {
+        
+      })
   }
 
   private fun processQuestionsForTopicResult(result: AsyncResult<List<Question>>): List<Question> {
