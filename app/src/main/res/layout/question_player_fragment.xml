@@ -13,14 +13,60 @@
   <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <TextView
-      android:id="@+id/dummy_text_view"
+    <androidx.recyclerview.widget.RecyclerView
+      android:id="@+id/question_recycler_view"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+    <androidx.recyclerview.widget.RecyclerView
+      android:id="@+id/feedback_recycler_view"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      app:layout_constraintTop_toTopOf="@id/question_recycler_view"
+      app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+    <LinearLayout
+      android:id="@+id/interaction_container"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      app:layout_constraintTop_toBottomOf="@id/feedback_recycler_view"
+      android:orientation="vertical">
+      <Button
+        android:id="@+id/submit_button"
+        app:layout_constraintTop_toBottomOf="@id/feedback_recycler_view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+      <Button
+        android:id="@+id/continue_button"
+        app:layout_constraintTop_toBottomOf="@id/feedback_recycler_view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    </LinearLayout>
+    <LinearLayout
+      android:id="@+id/end_screen_container"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      app:layout_constraintTop_toTopOf="@id/feedback_recycler_view">
+      <Button
+        android:id="@+id/replay_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+      <Button
+        android:id="@+id/return_to_topic_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    </LinearLayout>
+    <ProgressBar
+      android:id="@+id/question_progress_bar"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:text="This is dummy TextView for testing"
       app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent"/>
+      app:layout_constraintEnd_toEndOf="parent"/>
   </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
