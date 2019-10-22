@@ -1,42 +1,40 @@
 package org.oppia.app.topic.questionplayer
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.ObservableField
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.Transformations
-import kotlinx.coroutines.processNextEventInCurrentThread
 import org.oppia.app.databinding.QuestionPlayerFragmentBinding
 import org.oppia.app.fragment.FragmentScope
 import org.oppia.app.model.EphemeralQuestion
 import org.oppia.app.model.EphemeralState
-import org.oppia.app.model.Question
-import org.oppia.app.player.audio.AudioViewModel
 import org.oppia.app.viewmodel.ViewModelProvider
+import org.oppia.app.player.state.*
 import org.oppia.domain.question.QuestionAssessmentProgressController
 import org.oppia.domain.question.QuestionTrainingController
 import org.oppia.util.data.AsyncResult
 import org.oppia.util.logging.Logger
 import javax.inject.Inject
 
-private const val MULTIPLE_CHOICE_INPUT = "MultipleChoiceInput"
-private const val ITEM_SELECT_INPUT = "ItemSelectionInput"
-private const val TEXT_INPUT = "TextInput"
-private const val FRACTION_INPUT = "FractionInput"
-private const val NUMERIC_INPUT = "NumericInput"
-private const val NUMERIC_WITH_UNITS = "NumberWithUnits"
-
 /** The presenter for [QuestionPlayerFragment]. */
 @FragmentScope
 class QuestionPlayerFragmentPresenter @Inject constructor(
+  private val activity: AppCompatActivity,
   private val fragment: Fragment,
   private val logger: Logger,
   private val viewModelProvider: ViewModelProvider<QuestionPlayerViewModel>,
   private val questionTrainingController: QuestionTrainingController,
   private val questionAssessmentProgressController: QuestionAssessmentProgressController
 ) {
+
+  private lateinit var stateAdapter: StateAdapter
+  private val itemList: MutableList<Any> = ArrayList()
 
   private val viewModel by lazy {
     getQuestionPlayerViewModel()
@@ -46,25 +44,15 @@ class QuestionPlayerFragmentPresenter @Inject constructor(
   val numCorrectQuestions = 0
 
   fun handleCreateView(inflater: LayoutInflater, container: ViewGroup?): View? {
-    startTrainingSession()
     val binding = QuestionPlayerFragmentBinding.inflate(inflater, container, /* attachToRoot= */ false)
     binding.let {
       it.lifecycleOwner = fragment
       it.presenter = this
       it.viewModel = viewModel
     }
+    stateAdapter = StateAdapter(itemList, null)
+    subscribeToCurrentState()
     return binding.root
-  }
-
-  private fun startTrainingSession() {
-    val intent = fragment.requireActivity().intent
-    val skillsList = intent.extras?.getStringArrayList(QUESTION_PLAYER_ACTIVITY_SKILL_ID_LIST_ARGUMENT_KEY)
-    checkNotNull(skillsList) { "Fragment requires list of skill ids" }
-    questionTrainingController.startQuestionTrainingSession(skillsList.toList()).observe(fragment, Observer {startResult ->
-      if (startResult.isSuccess()) {
-        subscribeToCurrentState()
-      }
-    })
   }
 
   private fun subscribeToCurrentState() {
@@ -107,20 +95,21 @@ class QuestionPlayerFragmentPresenter @Inject constructor(
 
   }
 
-  fun handleSubmitButton() {
+  private fun onInteractionButtonClick() {
 
   }
 
-  fun handleContinueButton() {
-
+  private fun endQuestionTraining() {
+    questionTrainingController.stopQuestionTrainingSession().observe(fragment, Observer {
+      if (it.isSuccess()) {
+        (activity as QuestionPlayerActivity).finish()
+      }
+    })
   }
 
-  fun handleReplayButton() {
-
-  }
-
-  fun handleReturnToTopicButton() {
-
+  private fun hideKeyboard() {
+    val inputManager: InputMethodManager = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    inputManager.hideSoftInputFromWindow(fragment.view!!.windowToken, InputMethodManager.SHOW_FORCED)
   }
 
   private fun processEphemeralQuestionResult(result: AsyncResult<EphemeralQuestion>): EphemeralQuestion {
