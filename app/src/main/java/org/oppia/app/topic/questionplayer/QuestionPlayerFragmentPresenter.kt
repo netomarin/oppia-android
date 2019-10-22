@@ -40,7 +40,7 @@ class QuestionPlayerFragmentPresenter @Inject constructor(
     getQuestionPlayerViewModel()
   }
 
-  val currentEphemeralQuestion = ObservableField<EphemeralQuestion>()
+  private lateinit var currentEphemeralQuestion: EphemeralQuestion
   val numCorrectQuestions = 0
 
   fun handleCreateView(inflater: LayoutInflater, container: ViewGroup?): View? {
@@ -57,11 +57,12 @@ class QuestionPlayerFragmentPresenter @Inject constructor(
 
   private fun subscribeToCurrentState() {
     Transformations.map(questionAssessmentProgressController.getCurrentQuestion(), ::processEphemeralQuestionResult)
-      .observe(fragment, Observer {
-        currentEphemeralQuestion.set(it)
-        val currentQuestion = it.currentQuestionIndex
-        val totalQuestions = it.totalQuestionCount
-        updateInteractionInputByState(it.ephemeralState)
+      .observe(fragment, Observer { result->
+        itemList.clear()
+        currentEphemeralQuestion = result
+        val currentQuestion = result.currentQuestionIndex
+        val totalQuestions = result.totalQuestionCount
+        updateInteractionInputByState(result.ephemeralState)
         updateProgressBar(currentQuestion, totalQuestions)
         //set question adapter information
       })
