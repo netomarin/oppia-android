@@ -4,6 +4,9 @@
   xmlns:app="http://schemas.android.com/apk/res-auto">
   <data>
     <variable
+      name="adapter"
+      type="org.oppia.app.topic.play.ChapterSelectionAdapter" />
+    <variable
       name="storySummary"
       type="org.oppia.app.model.StorySummary" />
   </data>
@@ -72,5 +75,14 @@
       app:layout_constraintStart_toEndOf="@+id/chapter_count"
       app:layout_constraintTop_toBottomOf="@+id/story_name_text_view"
       android:src="@drawable/ic_keyboard_arrow_down_black_24dp" />
+    <ListView
+      android:id="@+id/chapter_list"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      android:layout_marginTop="8dp"
+      android:adapter="@{adapter}"
+      app:layout_constraintEnd_toEndOf="@+id/chapter_count"
+      app:layout_constraintStart_toEndOf="@+id/story_progress_container"
+      app:layout_constraintTop_toBottomOf="@+id/chapter_count"/>
   </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

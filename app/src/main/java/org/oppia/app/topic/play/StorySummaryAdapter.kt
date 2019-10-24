@@ -1,7 +1,9 @@
 package org.oppia.app.topic.play
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ExpandableListView
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.library.baseAdapters.BR
 import androidx.recyclerview.widget.RecyclerView
@@ -35,6 +37,13 @@ class StorySummaryAdapter(private var storyList: MutableList<StorySummary>) :
     RecyclerView.ViewHolder(binding.root) {
     internal fun bind(storySummary: StorySummary, @Suppress("UNUSED_PARAMETER") position: Int) {
       binding.setVariable(BR.storySummary, storySummary)
+
+      val chapterSelectionAdapter = ChapterSelectionAdapter(storySummary.chapterList)
+
+      binding.setVariable(BR.adapter, chapterSelectionAdapter)
+
+      Log.d("TAG", "StorySummaryViewHolder: " + storySummary.chapterList.size)
+
     }
   }
 }
