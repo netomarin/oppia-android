@@ -4,7 +4,10 @@ import android.content.Context
 import android.graphics.Typeface
 import android.util.AttributeSet
 import android.view.View
+import android.view.WindowManager
 import android.widget.EditText
+import org.oppia.app.utility.KeyBoardHelpher.Companion.hideSoftKeyboard
+import org.oppia.app.utility.KeyBoardHelpher.Companion.showSoftKeyboard
 
 // TODO(#249): These are the attributes which should be defined in XML, that are required for this interaction view to work correctly
 //  digits="0123456789/-"
@@ -26,11 +29,17 @@ class FractionInputInteractionView @JvmOverloads constructor(
     hintText = hint.toString()
   }
 
-  override fun onFocusChange(v: View?, hasFocus: Boolean) = if (hasFocus) {
-    hint = ""
-    typeface = Typeface.DEFAULT
-  } else {
-    hint = hintText
-    setTypeface(typeface, Typeface.ITALIC)
+  override fun onFocusChange(v: View?, hasFocus: Boolean) {
+    if (hasFocus) {
+      hint = ""
+      typeface = Typeface.SANS_SERIF
+      showSoftKeyboard(v!!,context)
+
+    } else {
+      hint = hintText
+      setTypeface(typeface, Typeface.ITALIC)
+      hideSoftKeyboard(v!!,context)
+    }
   }
+
 }
