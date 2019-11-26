@@ -43,7 +43,7 @@ class TopicPlayFragmentPresenter @Inject constructor(
 
   private lateinit var expandedChapterListIndexListener: ExpandedChapterListIndexListener
 
-  private val itemList: MutableList<TopicPlayItemViewModel> = ArrayList()
+  private val itemList: MutableList<StorySummaryViewModel> = ArrayList()
 
   fun handleCreateView(
     inflater: LayoutInflater,
@@ -80,7 +80,6 @@ class TopicPlayFragmentPresenter @Inject constructor(
             currentExpandedChapterListIndex = index + 1
           }
         }
-        itemList.add(TopicPlayTitleViewModel())
         for (storySummary in it.storyList) {
           itemList.add(StorySummaryViewModel(storySummary, fragment as StorySummarySelector))
         }

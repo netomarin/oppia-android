@@ -4,18 +4,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import org.oppia.app.databinding.TopicPlayStorySummaryBinding
-import org.oppia.app.databinding.TopicPlayTitleBinding
 import org.oppia.app.model.ChapterPlayState
 import org.oppia.app.model.ChapterSummary
 
 // TODO(#216): Make use of generic data-binding-enabled RecyclerView adapter.
 
-private const val VIEW_TYPE_TITLE_TEXT = 1
-private const val VIEW_TYPE_STORY_ITEM = 2
-
 /** Adapter to bind StorySummary to [RecyclerView] inside [TopicPlayFragment]. */
 class StorySummaryAdapter(
-  private val itemList: MutableList<TopicPlayItemViewModel>,
+  private val itemList: MutableList<StorySummaryViewModel>,
   private val chapterSummarySelector: ChapterSummarySelector,
   private val expandedChapterListIndexListener: ExpandedChapterListIndexListener,
   private var currentExpandedChapterListIndex: Int?
@@ -23,64 +19,22 @@ class StorySummaryAdapter(
   RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-    return when (viewType) {
-      // TODO(#216): Generalize this binding to make adding future items easier.
-      VIEW_TYPE_TITLE_TEXT -> {
-        val inflater = LayoutInflater.from(parent.context)
-        val binding =
-          TopicPlayTitleBinding.inflate(
-            inflater,
-            parent,
-            /* attachToParent= */ false
-          )
-        TopicPlayTitleViewHolder(binding)
-      }
-      VIEW_TYPE_STORY_ITEM -> {
-        val inflater = LayoutInflater.from(parent.context)
-        val binding =
-          TopicPlayStorySummaryBinding.inflate(
-            inflater,
-            parent,
-            /* attachToParent= */ false
-          )
-        StorySummaryViewHolder(binding)
-      }
-      else -> throw IllegalArgumentException("Invalid view type: $viewType")
-    }
+    val inflater = LayoutInflater.from(parent.context)
+    val binding =
+      TopicPlayStorySummaryBinding.inflate(
+        inflater,
+        parent,
+        /* attachToParent= */ false
+      )
+    return StorySummaryViewHolder(binding)
   }
 
   override fun onBindViewHolder(holder: RecyclerView.ViewHolder, i: Int) {
-    when (holder.itemViewType) {
-      VIEW_TYPE_TITLE_TEXT -> {
-        (holder as TopicPlayTitleViewHolder).bind()
-      }
-      VIEW_TYPE_STORY_ITEM -> {
-        (holder as StorySummaryViewHolder).bind(itemList[i] as StorySummaryViewModel, i)
-      }
-      else -> throw IllegalArgumentException("Invalid item view type: ${holder.itemViewType}")
-    }
-  }
-
-  override fun getItemViewType(position: Int): Int {
-    return when (itemList[position]) {
-      is TopicPlayTitleViewModel -> {
-        VIEW_TYPE_TITLE_TEXT
-      }
-      is StorySummaryViewModel -> {
-        VIEW_TYPE_STORY_ITEM
-      }
-      else -> throw IllegalArgumentException("Invalid type of data $position with item ${itemList[position]}")
-    }
+    (holder as StorySummaryViewHolder).bind(itemList[i], i)
   }
 
   override fun getItemCount(): Int {
     return itemList.size
-  }
-
-  private class TopicPlayTitleViewHolder(
-    binding: TopicPlayTitleBinding
-  ) : RecyclerView.ViewHolder(binding.root) {
-    internal fun bind() {}
   }
 
   inner class StorySummaryViewHolder(private val binding: TopicPlayStorySummaryBinding) :
